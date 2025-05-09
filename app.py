@@ -12,4 +12,4 @@ def read_root():
     
 @app.get("/version")
 def get_version():
-    return {"version": "1.0.0"}
+    return {"version": "1.0.0"} 
