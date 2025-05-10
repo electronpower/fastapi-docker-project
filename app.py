@@ -6,7 +6,7 @@ app = FastAPI()
 @app.get("/")
 def read_root():
     if os.getenv("ENVIRONMENT") == "production":
-        return {"message": "You have mastered all the topics efficiently - Updated with GitHub Actions!"}
+        return {"message": "You have mastered all the topics efficiently with azure container instances - Updated with GitHub Actions!"}
     else:
         return {"message": "Yes you have mastered the concept - Local Version"}
     
