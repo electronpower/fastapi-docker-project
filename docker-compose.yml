@@ -1,14 +1,10 @@
 version: '3'
-
-services:
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - BUILDPLATFORM=linux/amd64  # This helps with architecture compatibility
-    image: fastapiazcr.azurecr.io/fastapi-api:latest  # Specific image name with tag
-    ports:
-      - "8000:8000"
-    environment:
-      - ENVIRONMENT=development
+services:  
+  api:    
+    build: .    
+    ports:      
+     - "8000:8000"    
+    environment:      
+     - ENVIRONMENT=development 
+    volumes:
+      - .:/app
