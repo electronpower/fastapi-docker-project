@@ -33,5 +33,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.ACR_NAME }}.azurecr.io/fastapi-app:latest
-            ${{ secrets.ACR_NAME }}.azurecr.io/fastapi-app:${{ steps.version.outputs.VERSION }}
+            ${{ secrets.ACR_NAME }}.azurecr.io/fastapi-api:latest
+            ${{ secrets.ACR_NAME }}.azurecr.io/fastapi-api:${{ steps.version.outputs.VERSION }}
