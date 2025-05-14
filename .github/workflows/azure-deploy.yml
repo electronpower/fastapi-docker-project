@@ -24,7 +24,7 @@ jobs:
       - name: Extract version
         id: version
         run: |
-          VERSION=$(grep -o '"version": "[^"]*"' main.py | cut -d'"' -f4)
+          VERSION=$(grep -o '"version": "[^"]*"' app.py | cut -d'"' -f4)
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
       
       - name: Build and push
