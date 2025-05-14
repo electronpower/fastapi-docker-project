@@ -10,6 +10,8 @@ def read_root():
     else:
         return {"message": "Yes you have mastered the concept - Local Version"}
     
+    
+    
 @app.get("/version")
 def get_version():
     return {"version": "1.0.1"} 
