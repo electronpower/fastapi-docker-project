@@ -1,45 +1,37 @@
-name: Build and Deploy FastAPI to Azure
+name: Build and Deploy to ACI
 
 on:
   push:
-    branches: [ main ]  # Change this if your default branch is different
-  pull_request:
-    branches: [ main ]  # Change this if your default branch is different
+    branches: [ main ]
 
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
       
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
       
-    - name: Login to Azure
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
-    - name: Login to ACR
-      uses: docker/login-action@v1
-      with:
-        registry: ${{ secrets.ACR_LOGIN_SERVER }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
-        
-    - name: Build and Push Docker Image
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: ./dockerfile
-        platforms: linux/amd64
-        push: true
-        tags: ${{ secrets.ACR_LOGIN_SERVER }}/fastapi-api:latest
-        
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: web-fastapi-api  # Your web app name
-        images: ${{ secrets.ACR_LOGIN_SERVER }}/fastapi-api:latest
+      - name: Log in to ACR
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.ACR_NAME }}.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+      
+      - name: Extract version
+        id: version
+        run: |
+          VERSION=$(grep -o '"version": "[^"]*"' main.py | cut -d'"' -f4)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.ACR_NAME }}.azurecr.io/fastapi-app:latest
+            ${{ secrets.ACR_NAME }}.azurecr.io/fastapi-app:${{ steps.version.outputs.VERSION }}
